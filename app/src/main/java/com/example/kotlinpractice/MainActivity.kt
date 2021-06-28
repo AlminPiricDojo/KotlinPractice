@@ -2,53 +2,43 @@ package com.example.kotlinpractice
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.widget.Button
-import android.widget.TextView
+import android.widget.EditText
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.example.kotlinpractice.tools.CardAdapter
-import kotlin.random.Random
+import com.google.android.material.snackbar.Snackbar
+import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
-
-    private lateinit var rvBoard: RecyclerView
-    private lateinit var sampleText: TextView
-    private lateinit var refreshButton: Button
+    private lateinit var clRoot: ConstraintLayout
+    private lateinit var guessField: EditText
+    private lateinit var guessButton: Button
+    private lateinit var messages: ArrayList<String>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        sampleText = findViewById(R.id.tvSample)
-        refreshButton = findViewById(R.id.btRefresh)
-        refreshButton.setOnClickListener { changeText() }
+        clRoot = findViewById(R.id.clRoot)
+        messages = ArrayList()
 
-        rvBoard = findViewById(R.id.rvBoard)
+        rvMessages.adapter = MessageAdapter(this, messages)
+        rvMessages.layoutManager = LinearLayoutManager(this)
 
-        rvBoard.adapter = CardAdapter(this, 3)
-//        rvBoard.setHasFixedSize(true)
-        rvBoard.layoutManager = LinearLayoutManager(this)
+        guessField = findViewById(R.id.etGuessField)
+        guessButton = findViewById(R.id.btGuessButton)
+
+        guessButton.setOnClickListener { addMessage() }
     }
 
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-
-        val myText: String = sampleText.text.toString()
-        outState.putString("savedString", myText)
-    }
-
-    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
-        super.onRestoreInstanceState(savedInstanceState)
-
-        val myText = savedInstanceState.getString("savedString", "this is the default")
-        sampleText.text = myText
-    }
-
-    private fun changeText(){
-        val randomNum = Random.nextInt(2, 9)
-        Log.i("MainActivity", "NUM: $randomNum")
-        if(randomNum%2==0){sampleText.text = "The text has been changed"}
-        else{sampleText.text = "The number was not even"}
+    private fun addMessage(){
+        val msg = guessField.text.toString()
+        if(msg.isNotEmpty()){
+            messages.add(msg)
+            guessField.text.clear()
+            guessField.clearFocus()
+        }else{
+            Snackbar.make(clRoot, "Please enter some text", Snackbar.LENGTH_LONG).show()
+        }
     }
 }
