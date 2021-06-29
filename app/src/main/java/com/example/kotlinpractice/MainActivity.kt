@@ -25,7 +25,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         numbersGameButton = findViewById(R.id.btNumbersGame)
-//        numbersGameButton.setOnClickListener { startGame(GuessThePhrase()) }
+        numbersGameButton.setOnClickListener { startGame(NumbersGame()) }
         guessThePhraseButton = findViewById(R.id.btGuessThePhrase)
         guessThePhraseButton.setOnClickListener { startGame(GuessThePhrase()) }
     }
