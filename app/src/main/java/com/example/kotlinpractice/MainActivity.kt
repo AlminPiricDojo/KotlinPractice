@@ -19,56 +19,71 @@ class MainActivity : AppCompatActivity() {
     private lateinit var guessField: EditText
     private lateinit var guessButton: Button
     private lateinit var messages: ArrayList<String>
-    private lateinit var tvPrompt: TextView
+    private lateinit var tvPhrase: TextView
+    private lateinit var tvLetters: TextView
 
-    private var answer = 0
-    private var guesses = 3
+    private val answer = "this is the secret phrase"
+    private val myAnswerDictionary = mutableMapOf<Int, Char>()
+    private var myAnswer = ""
+    private var guessedLetters = ""
+    private var count = 0
+    private var guessPhrase = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        answer = Random.nextInt(10)
+        for(i in answer.indices){
+            if(answer[i] == ' '){
+                myAnswerDictionary[i] = ' '
+                myAnswer += ' '
+            }else{
+                myAnswerDictionary[i] = '*'
+                myAnswer += '*'
+            }
+        }
 
         clRoot = findViewById(R.id.clRoot)
         messages = ArrayList()
-
-        tvPrompt = findViewById(R.id.tvPrompt)
 
         rvMessages.adapter = MessageAdapter(this, messages)
         rvMessages.layoutManager = LinearLayoutManager(this)
 
         guessField = findViewById(R.id.etGuessField)
         guessButton = findViewById(R.id.btGuessButton)
-
         guessButton.setOnClickListener { addMessage() }
+
+        tvPhrase = findViewById(R.id.tvPhrase)
+        tvLetters = findViewById(R.id.tvLetters)
+
+        updateText()
     }
 
     private fun addMessage(){
         val msg = guessField.text.toString()
-        if(msg.isNotEmpty()){
-            if(guesses>0){
-                if(msg.toInt() == answer){
-                    disableEntry()
-                    showAlertDialog("You win!\n\nPlay again?")
-                }else{
-                    guesses--
-                    messages.add("You guessed $msg")
-                    messages.add("You have $guesses guesses left")
-                }
-                if(guesses==0){
-                    disableEntry()
-                    messages.add("You lose - The correct answer was $answer")
-                    messages.add("Game Over")
-                    showAlertDialog("You lose...\nThe correct answer was $answer.\n\nPlay again?")
-                }
+
+        if(guessPhrase){
+            if(msg == answer){
+                disableEntry()
+                showAlertDialog("You win!\n\nPlay again?")
+            }else{
+                messages.add("Wrong guess: $msg")
+                guessPhrase = false
+                updateText()
             }
-            guessField.text.clear()
-            guessField.clearFocus()
-            rvMessages.adapter?.notifyDataSetChanged()
         }else{
-            Snackbar.make(clRoot, "Please enter a number", Snackbar.LENGTH_LONG).show()
+            if(msg.isNotEmpty() && msg.length==1){
+                myAnswer = ""
+                guessPhrase = true
+                checkLetters(msg[0])
+            }else{
+                Snackbar.make(clRoot, "Please enter one letter only", Snackbar.LENGTH_LONG).show()
+            }
         }
+
+        guessField.text.clear()
+        guessField.clearFocus()
+        rvMessages.adapter?.notifyDataSetChanged()
     }
 
     private fun disableEntry(){
@@ -76,6 +91,42 @@ class MainActivity : AppCompatActivity() {
         guessButton.isClickable = false
         guessField.isEnabled = false
         guessField.isClickable = false
+    }
+
+    private fun updateText(){
+        tvPhrase.text = "Phrase:  " + myAnswer.toUpperCase()
+        tvLetters.text = "Guessed Letters:  " + guessedLetters
+        if(guessPhrase){
+            guessField.hint = "Guess the full phrase"
+        }else{
+            guessField.hint = "Guess a letter"
+        }
+    }
+
+    private fun checkLetters(guessedLetter: Char){
+        var found = 0
+        for(i in answer.indices){
+            if(answer[i] == guessedLetter){
+                myAnswerDictionary[i] = guessedLetter
+                found++
+            }
+        }
+        for(i in myAnswerDictionary){myAnswer += myAnswerDictionary[i.key]}
+        if(myAnswer==answer){
+            disableEntry()
+            showAlertDialog("You win!\n\nPlay again?")
+        }
+        if(guessedLetters.isEmpty()){guessedLetters+=guessedLetter}else{guessedLetters+=", "+guessedLetter}
+        if(found>0){
+            messages.add("Found $found ${guessedLetter.toUpperCase()}(s)")
+        }else{
+            messages.add("No ${guessedLetter.toUpperCase()}s found")
+        }
+        count++
+        val guessesLeft = 10 - count
+        if(count<10){messages.add("$guessesLeft guesses remaining")}
+        updateText()
+        rvMessages.scrollToPosition(messages.size - 1)
     }
 
     private fun showAlertDialog(title: String) {

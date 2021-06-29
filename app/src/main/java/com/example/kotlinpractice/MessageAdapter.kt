@@ -1,6 +1,7 @@
 package com.example.kotlinpractice
 
 import android.content.Context
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -26,6 +27,13 @@ class MessageAdapter(val context: Context, val messages: ArrayList<String>):
 
         holder.itemView.apply {
             tvMessage.text = message
+            if(message.startsWith("Found")){
+                tvMessage.setTextColor(Color.GREEN)
+            }else if(message.startsWith("No")||message.startsWith("Wrong")){
+                tvMessage.setTextColor(Color.RED)
+            }else{
+                tvMessage.setTextColor(Color.BLACK)
+            }
         }
     }
 
