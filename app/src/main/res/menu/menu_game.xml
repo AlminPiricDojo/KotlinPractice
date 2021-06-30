@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/mi_new_game"
+        android:title="New Game"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/mi_other_game"
+        android:title="Other Game"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/mi_back"
+        android:title="Main Menu"
+        app:showAsAction="never" />
+
+</menu>

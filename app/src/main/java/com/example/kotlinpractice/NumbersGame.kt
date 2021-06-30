@@ -1,9 +1,13 @@
 package com.example.kotlinpractice
 
+import android.app.Activity
 import android.content.DialogInterface
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.PersistableBundle
+import android.view.Menu
+import android.view.MenuItem
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
@@ -55,6 +59,40 @@ class NumbersGame : AppCompatActivity() {
         answer = savedInstanceState.getInt("answer", 0)
         guesses = savedInstanceState.getInt("guesses", 0)
         messages.addAll(savedInstanceState.getStringArrayList("messages")!!)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_game, menu)
+        return true
+    }
+
+    override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
+        val item: MenuItem = menu!!.getItem(1)
+        if(item.title == "Other Game"){ item.title = "Guess The Phrase" }
+        return super.onPrepareOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when(item.itemId){
+            R.id.mi_new_game -> {
+                CustomAlertDialog(this,"Are you sure you want to abandon the current game?")
+                return true
+            }
+            R.id.mi_other_game -> {
+                changeScreen(GuessThePhrase())
+                return true
+            }
+            R.id.mi_back -> {
+                changeScreen(MainActivity())
+                return true
+            }
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
+    private fun changeScreen(activity: Activity){
+        val intent = Intent(this, activity::class.java)
+        startActivity(intent)
     }
 
     private fun addMessage(){
