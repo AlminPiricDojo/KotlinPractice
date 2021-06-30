@@ -3,6 +3,7 @@ package com.example.kotlinpractice
 import android.content.DialogInterface
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.PersistableBundle
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
@@ -38,6 +39,22 @@ class NumbersGame : AppCompatActivity() {
         guessButton = findViewById(R.id.btGuessButton)
 
         guessButton.setOnClickListener { addMessage() }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+
+        outState.putInt("answer", answer)
+        outState.putInt("guesses", guesses)
+        outState.putStringArrayList("messages", messages)
+    }
+
+    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
+        super.onRestoreInstanceState(savedInstanceState)
+
+        answer = savedInstanceState.getInt("answer", 0)
+        guesses = savedInstanceState.getInt("guesses", 0)
+        messages.addAll(savedInstanceState.getStringArrayList("messages")!!)
     }
 
     private fun addMessage(){
