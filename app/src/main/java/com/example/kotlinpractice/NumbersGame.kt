@@ -46,7 +46,7 @@ class NumbersGame : AppCompatActivity() {
             if(guesses>0){
                 if(msg.toInt() == answer){
                     disableEntry()
-                    showAlertDialog("You win!\n\nPlay again?")
+                    CustomAlertDialog(this,"You win!\n\nPlay again?")
                 }else{
                     guesses--
                     messages.add("You guessed $msg")
@@ -56,14 +56,14 @@ class NumbersGame : AppCompatActivity() {
                     disableEntry()
                     messages.add("You lose - The correct answer was $answer")
                     messages.add("Game Over")
-                    showAlertDialog("You lose...\nThe correct answer was $answer.\n\nPlay again?")
+                    CustomAlertDialog(this,"You lose...\nThe correct answer was $answer.\n\nPlay again?")
                 }
             }
             guessField.text.clear()
             guessField.clearFocus()
             rvMessages.adapter?.notifyDataSetChanged()
         }else{
-            Snackbar.make(clRootNumbersGame, "Please enter a number", Snackbar.LENGTH_LONG).show()
+            Snackbar.make(clRootNumbersGame, "Please enter a number", Snackbar.LENGTH_SHORT).show()
         }
     }
 
@@ -72,30 +72,5 @@ class NumbersGame : AppCompatActivity() {
         guessButton.isClickable = false
         guessField.isEnabled = false
         guessField.isClickable = false
-    }
-
-    private fun showAlertDialog(title: String) {
-        // build alert dialog
-        val dialogBuilder = AlertDialog.Builder(this)
-
-        // set message of alert dialog
-        dialogBuilder.setMessage(title)
-            // if the dialog is cancelable
-            .setCancelable(false)
-            // positive button text and action
-            .setPositiveButton("Yes", DialogInterface.OnClickListener {
-                    dialog, id -> this.recreate()
-            })
-            // negative button text and action
-            .setNegativeButton("No", DialogInterface.OnClickListener {
-                    dialog, id -> dialog.cancel()
-            })
-
-        // create dialog box
-        val alert = dialogBuilder.create()
-        // set title for alert dialog box
-        alert.setTitle("Game Over")
-        // show alert dialog
-        alert.show()
     }
 }
