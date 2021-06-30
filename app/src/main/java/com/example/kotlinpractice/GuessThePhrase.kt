@@ -25,8 +25,8 @@ class GuessThePhrase : AppCompatActivity() {
     private lateinit var tvPhrase: TextView
     private lateinit var tvLetters: TextView
 
-    private val answer = "this is the secret phrase"
-    private val myAnswerDictionary = mutableMapOf<Int, Char>()
+    private var answer = "this is the secret phrase"
+    private var myAnswerDictionary = mutableMapOf<Int, Char>()
     private var myAnswer = ""
     private var guessedLetters = ""
     private var count = 0
@@ -59,6 +59,46 @@ class GuessThePhrase : AppCompatActivity() {
         tvPhrase = findViewById(R.id.tvPhrase)
         tvLetters = findViewById(R.id.tvLetters)
 
+        updateText()
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+
+        outState.putString("answer", answer)
+
+        val keys = myAnswerDictionary.keys.toIntArray()
+        val values = myAnswerDictionary.values.toCharArray()
+        outState.putIntArray("keys", keys)
+        outState.putCharArray("values", values)
+
+        outState.putString("myAnswer", myAnswer)
+        outState.putString("guessedLetters", guessedLetters)
+        outState.putInt("count", count)
+        outState.putBoolean("guessPhrase", guessPhrase)
+        outState.putStringArrayList("messages", messages)
+    }
+
+    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
+        super.onRestoreInstanceState(savedInstanceState)
+
+        answer = savedInstanceState.getString("answer", "nothing here")
+
+        val keys = savedInstanceState.getIntArray("keys")
+        val values = savedInstanceState.getCharArray("values")
+        if(keys != null && values != null){
+           if(keys.size == values.size){
+               myAnswerDictionary = mutableMapOf<Int, Char>().apply {
+                   for (i in keys.indices) this [keys[i]] = values[i]
+               }
+           }
+        }
+
+        myAnswer = savedInstanceState.getString("myAnswer", "")
+        guessedLetters = savedInstanceState.getString("guessedLetters", "")
+        count = savedInstanceState.getInt("count", 0)
+        guessPhrase = savedInstanceState.getBoolean("guessPhrase", false)
+        messages.addAll(savedInstanceState.getStringArrayList("messages")!!)
         updateText()
     }
 
