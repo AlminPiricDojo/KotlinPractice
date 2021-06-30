@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_guess_the_phrase.*
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlin.random.Random
 
 class GuessThePhrase : AppCompatActivity() {
     private lateinit var clRoot: ConstraintLayout
@@ -62,6 +63,28 @@ class GuessThePhrase : AppCompatActivity() {
         updateText()
     }
 
+    override fun recreate() {
+        super.recreate()
+        answer = "this is the secret phrase"
+        myAnswerDictionary.clear()
+        myAnswer = ""
+
+        for(i in answer.indices){
+            if(answer[i] == ' '){
+                myAnswerDictionary[i] = ' '
+                myAnswer += ' '
+            }else{
+                myAnswerDictionary[i] = '*'
+                myAnswer += '*'
+            }
+        }
+
+        guessedLetters = ""
+        count = 0
+        guessPhrase = true
+        messages.clear()
+    }
+
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
 
@@ -97,7 +120,7 @@ class GuessThePhrase : AppCompatActivity() {
         myAnswer = savedInstanceState.getString("myAnswer", "")
         guessedLetters = savedInstanceState.getString("guessedLetters", "")
         count = savedInstanceState.getInt("count", 0)
-        guessPhrase = savedInstanceState.getBoolean("guessPhrase", false)
+        guessPhrase = savedInstanceState.getBoolean("guessPhrase", true)
         messages.addAll(savedInstanceState.getStringArrayList("messages")!!)
         updateText()
     }

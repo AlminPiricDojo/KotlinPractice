@@ -27,6 +27,8 @@ class NumbersGame : AppCompatActivity() {
     private var answer = 0
     private var guesses = 3
 
+    private var newGame = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_numbers_game)
@@ -43,6 +45,13 @@ class NumbersGame : AppCompatActivity() {
         guessButton = findViewById(R.id.btGuessButton)
 
         guessButton.setOnClickListener { addMessage() }
+    }
+
+    override fun recreate() {
+        super.recreate()
+        answer = Random.nextInt(10)
+        guesses = 3
+        messages.clear()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
