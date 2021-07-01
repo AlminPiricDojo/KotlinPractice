@@ -30,6 +30,8 @@ class MainActivity : AppCompatActivity() {
         numbersGameButton.setOnClickListener { startGame(NumbersGame()) }
         guessThePhraseButton = findViewById(R.id.btGuessThePhrase)
         guessThePhraseButton.setOnClickListener { startGame(GuessThePhrase()) }
+
+        title = "Main Activity"
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

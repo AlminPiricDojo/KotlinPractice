@@ -45,6 +45,8 @@ class NumbersGame : AppCompatActivity() {
         guessButton = findViewById(R.id.btGuessButton)
 
         guessButton.setOnClickListener { addMessage() }
+
+        title = "Numbers Game"
     }
 
     override fun recreate() {

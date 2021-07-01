@@ -61,6 +61,8 @@ class GuessThePhrase : AppCompatActivity() {
         tvLetters = findViewById(R.id.tvLetters)
 
         updateText()
+
+        title = "Guess the Phrase"
     }
 
     override fun recreate() {
